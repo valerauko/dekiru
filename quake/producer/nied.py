@@ -4,7 +4,7 @@
 import urllib.request as request
 import time, json
 import os, logging
-from confluent_kafka import Producer, KafkaError
+from confluent_kafka import Producer
 
 def current_json():
     url = time.strftime('http://www.kmoni.bosai.go.jp/webservice/hypo/eew/%Y%m%d%H%M%S.json')
