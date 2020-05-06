@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: nied-producer
-          image: valerauko/nied:67a33b3
+          image: valerauko/nied:fd43ef4
           env:
             - name: KAFKA_BOOTSTRAP
               valueFrom:
