@@ -40,9 +40,8 @@ def should_skip(previous, current):
     # new report update
     if current['ver'] != previous['ver']:
         return False
-    # final already
-    if previous['ver'] == 'final':
-        return True
+    # repeating report
+    return True
 
 if __name__ == '__main__':
     os.environ['TZ'] = 'Asia/Tokyo' # nied is jst
