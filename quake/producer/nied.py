@@ -45,6 +45,9 @@ def should_skip(previous, current):
         return True
 
 if __name__ == '__main__':
+    os.environ['TZ'] = 'Asia/Tokyo' # nied is jst
+    time.tzset()
+
     TOPIC = 'quakes'
     FORMAT = '%(asctime)s [%(levelname)s] %(message)s'
     logging.basicConfig(level=logging.DEBUG, format=FORMAT)
