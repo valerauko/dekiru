@@ -20,7 +20,7 @@ def latest():
         'id': json['report_id'],
         'ver': 'final' if json['is_final'] else json['report_num'],
         'name': json['region_name'],
-        'time': json['origin_time'],
+        'time': time.mktime(time.strptime(json['origin_time'], '%Y%m%d%H%M%S')),
         'lat': float(json['latitude']),
         'lon': float(json['longitude']),
         'shindo': json['calcintensity'],
