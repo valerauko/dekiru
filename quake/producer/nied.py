@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
     last_seen = {}
     while 1:
-        time.sleep(1)
+        time.sleep(1) # ignore shift due to processing time
         item = latest()
 
         if should_skip(last_seen, item):
