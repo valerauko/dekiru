@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crossload
+  labels:
+    app: quake
+    role: crossload
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quake
+      role: crossload
+  template:
+    metadata:
+      labels:
+        app: quake
+        role: crossload
+    spec:
+      containers:
+        - name: db-crossload
+          image: valerauko/quake-crossload:latest
+          env:
+            - name: RETHINK_HOST
+              value: 'rethinkdb.default.svc'
+            - name: RETHINK_PORT
+              value: 28015
+            - name: RETHINK_DB
+              value: 'quake'
+            - name: RETHINK_TABLE
+              value: 'quakes'
+            - name: KAFKA_TOPIC
+              value: 'quakes'
+            - name: KAFKA_BOOTSTRAP
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-config
+                  key: KAFKA_BOOTSTRAP
+            - name: KAFKA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-config
+                  key: KAFKA_API_KEY
+            - name: KAFKA_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-config
+                  key: KAFKA_API_SECRET
