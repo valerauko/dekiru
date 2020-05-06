@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quake
+  labels:
+    app: quake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quake
+  template:
+    metadata:
+      labels:
+        app: quake
+    spec:
+      containers:
+        - name: nied-producer
+          image: valerauko/nied:latest
+          env:
+            - name: KAFKA_BOOTSTRAP
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-config
+                  key: KAFKA_BOOTSTRAP
+            - name: KAFKA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-config
+                  key: KAFKA_API_KEY
+            - name: KAFKA_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-config
+                  key: KAFKA_API_SECRET
