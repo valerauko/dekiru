@@ -4,7 +4,8 @@ apiVersion: v1
 metadata:
   name: rethinkdb-storage
   labels:
-    app: rethinkdb
+    app: quake
+    role: storage
 spec:
   accessModes:
     - "ReadWriteOnce"
@@ -19,16 +20,19 @@ kind: Deployment
 metadata:
   name: rethinkdb
   labels:
-    app: rethinkdb
+    app: quake
+    role: database
 spec:
   selector:
     matchLabels:
-      app: rethinkdb
+      app: quake
+      role: database
   replicas: 1
   template:
     metadata:
       labels:
-        app: rethinkdb
+        app: quake
+        role: database
     spec:
       containers:
       - name: rethinkdb
@@ -52,9 +56,13 @@ kind: Service
 apiVersion: v1
 metadata:
   name: rethinkdb
+  labels:
+    app: quake
+    role: database
 spec:
   selector:
-    app: rethinkdb
+    app: quake
+    role: database
   ports:
   - name: data
     port: 28015
