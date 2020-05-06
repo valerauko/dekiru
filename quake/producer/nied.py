@@ -3,13 +3,13 @@
 
 import urllib.request as request
 import time, json
-import os
+import os, logging
 from confluent_kafka import Producer, KafkaError
 
 def current_json():
     url = time.strftime('http://www.kmoni.bosai.go.jp/webservice/hypo/eew/%Y%m%d%H%M%S.json')
     with request.urlopen(url) as response:
-        print("Loaded", url)
+        logging.debug("Loaded %s", url)
         return json.load(response)
 
 def latest():
@@ -46,6 +46,9 @@ def should_skip(previous, current):
 
 if __name__ == '__main__':
     TOPIC = 'quakes'
+    FORMAT = '%(asctime)s [%(levelname)s] %(message)s'
+    logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+
     p = Producer({
         'bootstrap.servers': os.environ['KAFKA_BOOTSTRAP'],
         'sasl.mechanisms': 'PLAIN',
@@ -63,6 +66,6 @@ if __name__ == '__main__':
             continue
 
         last_seen = item
-        print("Writing to Kafka", item)
+        logging.info("Writing to Kafka %s", item)
         p.produce(TOPIC, value=json.dumps(item))
         p.flush()
