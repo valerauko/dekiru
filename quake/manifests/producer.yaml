@@ -4,20 +4,25 @@ metadata:
   name: quake
   labels:
     app: quake
+    role: producer
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: quake
+      role: producer
   template:
     metadata:
       labels:
         app: quake
+        role: producer
     spec:
       containers:
         - name: nied-producer
-          image: valerauko/nied:fd43ef4
+          image: valerauko/nied:85fbddb
           env:
+            - name: KAFKA_TOPIC
+              value: 'quakes'
             - name: KAFKA_BOOTSTRAP
               valueFrom:
                 secretKeyRef:
