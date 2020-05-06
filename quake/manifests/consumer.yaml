@@ -24,7 +24,7 @@ spec:
             - name: RETHINK_HOST
               value: 'rethinkdb.default.svc'
             - name: RETHINK_PORT
-              value: 28015
+              value: '28015'
             - name: RETHINK_DB
               value: 'quake'
             - name: RETHINK_TABLE
