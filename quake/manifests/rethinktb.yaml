@@ -1,0 +1,61 @@
+# pvc
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: rethinkdb-storage
+  labels:
+    app: rethinkdb
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "10Gi"
+
+---
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rethinkdb
+  labels:
+    app: rethinkdb
+spec:
+  selector:
+    matchLabels:
+      app: rethinkdb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rethinkdb
+    spec:
+      containers:
+      - name: rethinkdb
+        image: rethinkdb:2.4.0
+        volumeMounts:
+        - mountPath: /data
+          name: rethinkdb-storage
+        ports:
+        - name: admin
+          containerPort: 8080
+        - name: data
+          containerPort: 28015
+      volumes:
+      - name: rethinkdb-storage
+        persistentVolumeClaim:
+          claimName: rethinkdb-storage
+
+---
+# service
+kind: Service
+apiVersion: v1
+metadata:
+  name: rethinkdb
+spec:
+  selector:
+    app: rethinkdb
+  ports:
+  - name: data
+    port: 28015
+    targetPort: data
