@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: db-crossload
-          image: valerauko/quake-crossload:latest
+          image: valerauko/quake-crossload:c3aef6b
           env:
             - name: RETHINK_HOST
               value: 'rethinkdb.default.svc'
