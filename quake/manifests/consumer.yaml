@@ -18,31 +18,31 @@ spec:
         role: crossload
     spec:
       containers:
-        - name: db-crossload
-          image: valerauko/quake-crossload:fc1db46
-          env:
-            - name: RETHINK_HOST
-              value: 'rethinkdb.default.svc'
-            - name: RETHINK_PORT
-              value: '28015'
-            - name: RETHINK_DB
-              value: 'quake'
-            - name: RETHINK_TABLE
-              value: 'quakes'
-            - name: KAFKA_TOPIC
-              value: 'quakes'
-            - name: KAFKA_BOOTSTRAP
-              valueFrom:
-                secretKeyRef:
-                  name: kafka-config
-                  key: KAFKA_BOOTSTRAP
-            - name: KAFKA_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: kafka-config
-                  key: KAFKA_API_KEY
-            - name: KAFKA_API_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: kafka-config
-                  key: KAFKA_API_SECRET
+      - name: db-crossload
+        image: valerauko/quake-crossload:fc1db46
+        env:
+        - name: RETHINK_HOST
+          value: 'rethinkdb.default.svc'
+        - name: RETHINK_PORT
+          value: '28015'
+        - name: RETHINK_DB
+          value: 'quake'
+        - name: RETHINK_TABLE
+          value: 'quakes'
+        - name: KAFKA_TOPIC
+          value: 'quakes'
+        - name: KAFKA_BOOTSTRAP
+          valueFrom:
+            secretKeyRef:
+              name: kafka-config
+              key: KAFKA_BOOTSTRAP
+        - name: KAFKA_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: kafka-config
+              key: KAFKA_API_KEY
+        - name: KAFKA_API_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: kafka-config
+              key: KAFKA_API_SECRET

@@ -8,7 +8,7 @@ metadata:
     role: storage
 spec:
   accessModes:
-    - "ReadWriteOnce"
+  - "ReadWriteOnce"
   resources:
     requests:
       storage: "10Gi"
