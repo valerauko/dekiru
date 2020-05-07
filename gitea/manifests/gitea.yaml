@@ -1,0 +1,89 @@
+# pvc
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: gitea-storage
+  labels:
+    app: gitea
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "10Gi"
+
+---
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  labels:
+    app: gitea
+spec:
+  selector:
+    matchLabels:
+      app: gitea
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      containers:
+      - name: gitea
+        image: gitea/gitea:1.11.4
+        volumeMounts:
+        - mountPath: /data
+          name: gitea-storage
+        ports:
+        - name: http
+          containerPort: 3000
+        - name: ssh
+          containerPort: 22
+      volumes:
+      - name: gitea-storage
+        persistentVolumeClaim:
+          claimName: gitea-storage
+
+---
+# service
+kind: Service
+apiVersion: v1
+metadata:
+  name: gitea
+  labels:
+    app: gitea
+spec:
+  selector:
+    app: gitea
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+  - name: ssh
+    port: 22
+    targetPort: ssh
+
+---
+# ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gitea
+  labels:
+    app: gitea
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+  - host: git.dekiru.tech
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: gitea
+          servicePort: http
+  tls:
+    - hosts:
+      - git.dekiru.tech
