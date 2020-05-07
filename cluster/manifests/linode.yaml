@@ -1,0 +1,17 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: linode-dns
+  namespace: kube-system
+spec:
+  encryptedData:
+    LINODE_TOKEN: AgAvfyrvuHTwg4isTfaiX2Qt62uo4TPEaISobGfPyX5HJqH2VPvEjbP6u8WWVZLOFfsM9NZV48K3Vat5F/b61s75YpeDrWhZYmf2IBVJ+H/dZcglQZ12H4CvU08mSABJoZW/IVT/F+0HSaZZpgRjSnpLQhDQmhDiVenALLxkbUG5uU1qVl/ZROYuVLuP4aV5hB9LBfrETpv640eDV/QgX4vFCzR3Hr4QW8PedfVYaKJyucCUCVYIRV7ZzHCsiPp1nNysqxshospaIFtehtaaGQzZJM7SUrSlqV9B7n47MYUp1i2RLqgtJR5G4VnCL3bM45q1q7wbbKCopyZ6gHy/WUPCzv6CKpfhnx3q43Coy7vnKjrocTEBTlxHW3jObd1GPu4nekCQo0MoSfE4UxpDncjkxBKPX1ve8w7hDBHRq8FDme4WAitGEgCPrfCFhrLDRgRD9ZWGL1MN2a2UQKLaZRYML1SYAQdVxEV0t6aveTGvMdj4CeRtw5vHrEc0zBUnlbDvDNiKB5d9ZCZY1J8ZrM/nVY4afTOsk1ar47jaP5w0FozSpNM+MoyL052Qurdc6qDflbGBoRFHM+Me+qgkGuCYkN8fHD+99EktY8ObU34kkD8zm4CfrXgsC/tDZS5eetpBphrZj55QfHg/xFQ1zwqPPDwHna5s/UCOKrvVFzPGaZSh1Y5Hbyo7ADRO+Z6x8zrTFRaOm2D7Q0pbDrJ1m4860gvTXuGkAdnXB0WcB9QypXrVlCRuKXbhuFbuD9J8Z8JpQxFUX1i9R/8Kv5VP8RXp
+  template:
+    metadata:
+      creationTimestamp: null
+      name: linode-dns
+      namespace: kube-system
+    type: Generic
+status: {}
+
