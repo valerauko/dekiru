@@ -24,6 +24,7 @@ QUAKE_TITLES = [
 
 def fetch_xml(url=QUAKE_URL):
     with request.urlopen(url) as response:
+        logging.debug("Loaded %s", url)
         raw_data = response.read()
         return et.fromstring(raw_data)
 
