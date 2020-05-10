@@ -1,6 +1,8 @@
 FROM python:buster
 
 RUN pip3 install confluent-kafka
-ADD nied.py .
 
-CMD ["python3", "nied.py"]
+ARG provider=nied
+ADD $provider.py app.py
+
+CMD ["python3", "app.py"]
