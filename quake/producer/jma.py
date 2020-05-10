@@ -5,6 +5,7 @@ import urllib.request as request
 import xml.etree.ElementTree as et
 from datetime import datetime
 import time, re, os, logging, json
+from confluent_kafka import Producer
 
 QUAKE_URL = 'http://www.data.jma.go.jp/developer/xml/feed/eqvol.xml'
 NS = {'atom': 'http://www.w3.org/2005/Atom',
@@ -134,31 +135,34 @@ def fetch_detail(url):
         # there might be other cases, probably fails then
         return full_report(xml)
 
-def check_for_new():
-    xml = fetch_xml()
-    for entry in xml.iterfind('atom:entry', NS):
-        if entry.find('atom:title', NS).text not in QUAKE_TITLES:
-            continue
-        if not is_new(entry.find('atom:updated', NS).text):
-            break
-        print(fetch_detail(entry.find('atom:link', NS).attrib['href']))
-    return {}
+if __name__ == '__main__':
+    os.environ['TZ'] = 'Asia/Tokyo'
+    time.tzset()
 
-# if __name__ == '__main__':
-#     while 1:
-#         time.sleep(5)
-#         item = check_for_new()
-#
-#         if not item:
-#             continue
-#
-#         print(item)
+    FORMAT = '%(asctime)s [%(levelname)s] %(message)s'
+    logging.basicConfig(level=logging.DEBUG, format=FORMAT)
 
-# shindo
-# print(fetch_detail('http://www.data.jma.go.jp/developer/xml/data/b9f1f72b-4590-3a04-a7b4-fc83499fff23.xml'))
-# hypocenter
-# print(fetch_detail('http://www.data.jma.go.jp/developer/xml/data/f6b96ac0-a1ff-3385-a218-a86bacaac566.xml'))
-# full
-# print(fetch_detail('http://www.data.jma.go.jp/developer/xml/data/5cdd4a09-e0a2-3097-b1af-8ca72398d130.xml'))
+    p = Producer({
+        'bootstrap.servers': os.environ['KAFKA_BOOTSTRAP'],
+        'sasl.mechanisms': 'PLAIN',
+        'security.protocol': 'SASL_SSL',
+        'sasl.username': os.environ['KAFKA_API_KEY'],
+        'sasl.password': os.environ['KAFKA_API_SECRET'],
+    })
 
-check_for_new()
+    while 1:
+        time.sleep(CHECK_INTERVAL)
+        item = check_for_new()
+
+        xml = fetch_xml()
+        for entry in xml.iterfind('atom:entry', NS):
+            if entry.find('atom:title', NS).text not in QUAKE_TITLES:
+                continue
+            if not is_new(entry.find('atom:updated', NS).text):
+                break
+
+            report = fetch_detail(entry.find('atom:link', NS).attrib['href'])
+            logging.info("Writing to Kafka %s", report)
+            p.produce(os.environ['KAFKA_TOPIC'], value=json.dumps(report))
+
+        p.flush()
