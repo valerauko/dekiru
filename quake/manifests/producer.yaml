@@ -5,21 +5,68 @@ metadata:
   labels:
     app: quake
     role: producer
+    provider: nied
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: quake
       role: producer
+      provider: nied
   template:
     metadata:
       labels:
         app: quake
         role: producer
+        provider: nied
     spec:
       containers:
       - name: nied-producer
         image: valerauko/nied:8c98925
+        env:
+        - name: KAFKA_TOPIC
+          value: 'quakes'
+        - name: KAFKA_BOOTSTRAP
+          valueFrom:
+            secretKeyRef:
+              name: kafka-config
+              key: KAFKA_BOOTSTRAP
+        - name: KAFKA_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: kafka-config
+              key: KAFKA_API_KEY
+        - name: KAFKA_API_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: kafka-config
+              key: KAFKA_API_SECRET
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jma
+  labels:
+    app: quake
+    role: producer
+    provider: jma
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quake
+      role: producer
+      provider: jma
+  template:
+    metadata:
+      labels:
+        app: quake
+        role: producer
+        provider: jma
+    spec:
+      containers:
+      - name: jma-producer
+        image: valerauko/jma:8c98925
         env:
         - name: KAFKA_TOPIC
           value: 'quakes'
