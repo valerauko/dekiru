@@ -16,9 +16,17 @@ def latest():
     json = current_json()
     if json['result']['message'] != '' || json['is_training']:
         return {}
+
+    if json['is_final']:
+        ver = 'final'
+    elif json['is_cancel']:
+        ver = 'retracted'
+    else:
+        ver = json['report_num']
+
     return {
         'id': json['report_id'],
-        'ver': 'final' if json['is_final'] else json['report_num'],
+        'ver': ver,
         'name': json['region_name'],
         'time': time.mktime(time.strptime(json['origin_time'], '%Y%m%d%H%M%S')),
         'lat': float(json['latitude']),
