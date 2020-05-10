@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: producer
+  name: nied
   labels:
     app: quake
     role: producer
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: nied-producer
-        image: valerauko/nied:85fbddb
+        image: valerauko/nied:8c98925
         env:
         - name: KAFKA_TOPIC
           value: 'quakes'
