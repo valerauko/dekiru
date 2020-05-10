@@ -6,7 +6,7 @@ import xml.etree.ElementTree as et
 from datetime import datetime
 import time, re, os, logging, json
 
-QUAKE_URL = 'http://www.data.jma.go.jp/developer/xml/feed/eqvol_l.xml'
+QUAKE_URL = 'http://www.data.jma.go.jp/developer/xml/feed/eqvol.xml'
 NS = {'atom': 'http://www.w3.org/2005/Atom',
       'jmx': 'http://xml.kishou.go.jp/jmaxml1/',
       'seism': 'http://xml.kishou.go.jp/jmaxml1/body/seismology1/',
