@@ -14,7 +14,7 @@ def current_json():
 
 def latest():
     json = current_json()
-    if json['result']['message'] != '' || json['is_training']:
+    if json['result']['message'] or json['is_training']:
         return {}
 
     if json['is_final']:

@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: nied-producer
-        image: valerauko/nied:8c98925
+        image: valerauko/nied:b56d1d6
         env:
         - name: KAFKA_TOPIC
           value: 'quakes'
