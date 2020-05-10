@@ -153,7 +153,6 @@ if __name__ == '__main__':
 
     while 1:
         time.sleep(CHECK_INTERVAL)
-        item = check_for_new()
 
         xml = fetch_xml()
         for entry in xml.iterfind('atom:entry', NS):

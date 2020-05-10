@@ -66,7 +66,7 @@ spec:
     spec:
       containers:
       - name: jma-producer
-        image: valerauko/jma:8c98925
+        image: valerauko/jma:79f65b5
         env:
         - name: KAFKA_TOPIC
           value: 'quakes'
