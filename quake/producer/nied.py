@@ -14,7 +14,7 @@ def current_json():
 
 def latest():
     json = current_json()
-    if json['result']['message'] != '':
+    if json['result']['message'] != '' || json['is_training']:
         return {}
     return {
         'id': json['report_id'],
