@@ -3,8 +3,8 @@
 
 import urllib.request as request
 import xml.etree.ElementTree as et
-import dateutil.parser as dateparser
-import time, re
+from datetime import datetime
+import time, re, os, logging, json
 
 QUAKE_URL = 'http://www.data.jma.go.jp/developer/xml/feed/eqvol_l.xml'
 NS = {'atom': 'http://www.w3.org/2005/Atom',
@@ -27,7 +27,7 @@ def fetch_xml(url=QUAKE_URL):
         return et.fromstring(raw_data)
 
 def is_new(str):
-    date = dateparser.isoparse(str)
+    date = datetime.fromisoformat(str)
     return date.timestamp() > time.time() - CHECK_INTERVAL
 
 # Head/InfoType
@@ -85,7 +85,7 @@ def shindo_only(xml):
         'id': xml.find(ID_PATH, NS).text,
         'ver': xml.find(VERSION_PATH, NS).text,
         'name': xml.find(ALT_AREA_PATH, NS).text,
-        'time': xml.find(ALT_TIME_PATH, NS).text,
+        'time': datetime.fromisoformat(xml.find(ALT_TIME_PATH, NS).text),
         'shindo': xml.find(SHINDO_PATH, NS).text
     }
 
@@ -97,7 +97,7 @@ def hypocenter(xml):
         'id': xml.find(ID_PATH, NS).text,
         'ver': xml.find(VERSION_PATH, NS).text,
         'name': xml.find(AREA_PATH, NS).text,
-        'time': xml.find(TIME_PATH, NS).text,
+        'time': datetime.fromisoformat(xml.find(TIME_PATH, NS).text),
         'lat': lat,
         'lon': lon,
         'magnitude': float(xml.find(MAGNITUDE_PATH, NS).text)
@@ -112,7 +112,7 @@ def full_report(xml):
         'id': xml.find(ID_PATH, NS).text,
         'ver': xml.find(VERSION_PATH, NS).text,
         'name': xml.find(AREA_PATH, NS).text,
-        'time': xml.find(TIME_PATH, NS).text,
+        'time': datetime.fromisoformat(xml.find(TIME_PATH, NS).text),
         'lat': lat,
         'lon': lon,
         'shindo': xml.find(SHINDO_PATH, NS).text,
