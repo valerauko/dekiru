@@ -3,7 +3,7 @@
 
 import urllib.request as request
 import xml.etree.ElementTree as et
-from datetime import datetime
+import dateutil.parser as dateparser
 import time, re, os, logging, json
 from confluent_kafka import Producer
 
@@ -29,7 +29,7 @@ def fetch_xml(url=QUAKE_URL):
         return et.fromstring(raw_data)
 
 def is_new(str):
-    date = datetime.fromisoformat(str)
+    date = dateparser.isoparse(str)
     return date.timestamp() > time.time() - CHECK_INTERVAL
 
 # Head/InfoType
@@ -87,7 +87,7 @@ def shindo_only(xml):
         'id': xml.find(ID_PATH, NS).text,
         'ver': xml.find(VERSION_PATH, NS).text,
         'name': xml.find(ALT_AREA_PATH, NS).text,
-        'time': datetime.fromisoformat(xml.find(ALT_TIME_PATH, NS).text),
+        'time': dateparser.isoparse(xml.find(ALT_TIME_PATH, NS).text).timestamp,
         'shindo': xml.find(SHINDO_PATH, NS).text
     }
 
@@ -99,7 +99,7 @@ def hypocenter(xml):
         'id': xml.find(ID_PATH, NS).text,
         'ver': xml.find(VERSION_PATH, NS).text,
         'name': xml.find(AREA_PATH, NS).text,
-        'time': datetime.fromisoformat(xml.find(TIME_PATH, NS).text),
+        'time': dateparser.isoparse(xml.find(TIME_PATH, NS).text).timestamp,
         'lat': lat,
         'lon': lon,
         'magnitude': float(xml.find(MAGNITUDE_PATH, NS).text)
@@ -114,7 +114,7 @@ def full_report(xml):
         'id': xml.find(ID_PATH, NS).text,
         'ver': xml.find(VERSION_PATH, NS).text,
         'name': xml.find(AREA_PATH, NS).text,
-        'time': datetime.fromisoformat(xml.find(TIME_PATH, NS).text),
+        'time': dateparser.isoparse(xml.find(TIME_PATH, NS).text).timestamp,
         'lat': lat,
         'lon': lon,
         'shindo': xml.find(SHINDO_PATH, NS).text,
