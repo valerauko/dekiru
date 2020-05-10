@@ -47,7 +47,6 @@ if __name__ == '__main__':
     os.environ['TZ'] = 'Asia/Tokyo' # nied is jst
     time.tzset()
 
-    TOPIC = 'quakes'
     FORMAT = '%(asctime)s [%(levelname)s] %(message)s'
     logging.basicConfig(level=logging.DEBUG, format=FORMAT)
 
@@ -69,5 +68,5 @@ if __name__ == '__main__':
 
         last_seen = item
         logging.info("Writing to Kafka %s", item)
-        p.produce(TOPIC, value=json.dumps(item))
+        p.produce(os.environ['KAFKA_TOPIC'], value=json.dumps(item))
         p.flush()
