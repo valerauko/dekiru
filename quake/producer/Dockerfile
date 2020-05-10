@@ -1,6 +1,6 @@
 FROM python:buster
 
-RUN pip3 install confluent-kafka
+RUN pip3 install confluent-kafka python-dateutil
 
 ARG provider=nied
 ADD $provider.py app.py
