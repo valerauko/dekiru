@@ -72,7 +72,8 @@ if __name__ == '__main__':
                 continue
 
             record = { key: msg.value[key] for key in ['id', 'ver', 'name', 'shindo', 'magnitude'] if key in {*msg.value} }
-            record['location'] = r.point(msg.value['lon'], msg.value['lat'])
+            if msg.value['lon']:
+                record['location'] = r.point(msg.value['lon'], msg.value['lat'])
             record['occurred_at'] = datetime.fromtimestamp(msg.value['time'], timezone.utc)
             record['updated_at'] = r.now()
 
