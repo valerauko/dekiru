@@ -152,8 +152,6 @@ if __name__ == '__main__':
     })
 
     while 1:
-        time.sleep(CHECK_INTERVAL)
-
         xml = fetch_xml()
         for entry in xml.iterfind('atom:entry', NS):
             if entry.find('atom:title', NS).text not in QUAKE_TITLES:
@@ -166,3 +164,4 @@ if __name__ == '__main__':
             p.produce(os.environ['KAFKA_TOPIC'], value=json.dumps(report))
 
         p.flush()
+        time.sleep(CHECK_INTERVAL)
