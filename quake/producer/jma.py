@@ -4,7 +4,7 @@
 import urllib.request as request
 import xml.etree.ElementTree as et
 import dateutil.parser as dateparser
-import time, re, os, logging, json
+import time, re, os, logging, json, threading
 from confluent_kafka import Producer
 
 QUAKE_URL = 'http://www.data.jma.go.jp/developer/xml/feed/eqvol.xml'
@@ -136,11 +136,25 @@ def fetch_detail(url):
         # there might be other cases, probably fails then
         return full_report(xml)
 
+def check_and_publish(p):
+    xml = fetch_xml()
+    for entry in xml.iterfind('atom:entry', NS):
+        if entry.find('atom:title', NS).text not in QUAKE_TITLES:
+            continue
+        if not is_new(entry.find('atom:updated', NS).text):
+            break
+
+        report = fetch_detail(entry.find('atom:link', NS).attrib['href'])
+        logging.info("Writing to Kafka %s", report)
+        p.produce(os.environ['KAFKA_TOPIC'], value=json.dumps(report))
+
+    p.flush()
+
 if __name__ == '__main__':
     os.environ['TZ'] = 'Asia/Tokyo'
     time.tzset()
 
-    FORMAT = '%(asctime)s [%(levelname)s] %(message)s'
+    FORMAT = '%(asctime)s %(threadName)s [%(levelname)s] %(message)s'
     logging.basicConfig(level=logging.DEBUG, format=FORMAT)
 
     p = Producer({
@@ -152,16 +166,5 @@ if __name__ == '__main__':
     })
 
     while 1:
-        xml = fetch_xml()
-        for entry in xml.iterfind('atom:entry', NS):
-            if entry.find('atom:title', NS).text not in QUAKE_TITLES:
-                continue
-            if not is_new(entry.find('atom:updated', NS).text):
-                break
-
-            report = fetch_detail(entry.find('atom:link', NS).attrib['href'])
-            logging.info("Writing to Kafka %s", report)
-            p.produce(os.environ['KAFKA_TOPIC'], value=json.dumps(report))
-
-        p.flush()
+        threading.Thread(target=check_and_publish, args=(p,)).start()
         time.sleep(CHECK_INTERVAL)
