@@ -13,7 +13,7 @@ NS = {'atom': 'http://www.w3.org/2005/Atom',
       'seism': 'http://xml.kishou.go.jp/jmaxml1/body/seismology1/',
       'eb': 'http://xml.kishou.go.jp/jmaxml1/elementBasis1/',
       'ib': 'http://xml.kishou.go.jp/jmaxml1/informationBasis1/'}
-CHECK_INTERVAL = 30
+CHECK_INTERVAL = 60
 QUAKE_TITLES = [
     '震源・震度に関する情報',
     '震源に関する情報',
